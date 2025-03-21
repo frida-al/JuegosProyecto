@@ -1,5 +1,5 @@
 # PACMAN :V
-
+## Por Cesar Augusto Ramirez Davila A01712439
 Este proyecto es una implementación del clásico juego **Pac-Man** en Python usando la librería `turtle` y `freegames`.
 
 ## Cambios realizados al código original
