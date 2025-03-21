@@ -12,6 +12,12 @@ from turtle import *
 
 from freegames import line
 
+# vector to keep track of occupied squares
+squares= []
+
+# returns if a square is occupied
+def occupied(x, y):
+	return (x, y) in squares
 
 def grid():
     """Draw tic-tac-toe grid."""
@@ -54,13 +60,21 @@ def tap(x, y):
     """Draw X or O in tapped square."""
     x = floor(x)
     y = floor(y)
-    player = state['player']
-    draw = players[player]
-    draw(x, y)
-    update()
-    state['player'] = not player
-
-
+    # checks if the square is in use
+    if occupied(x, y):
+        up()
+        goto(-50, 180)
+        color('red')
+        write("Square in use", font=("Arial", 12, "bold"))
+    # if it is empty draws an X or O
+    else:
+        squares.append((x, y))
+        player = state['player']
+        draw = players[player]
+        draw(x, y)
+        update()
+        state['player'] = not player
+  
 setup(420, 420, 370, 0)
 hideturtle()
 tracer(False)
