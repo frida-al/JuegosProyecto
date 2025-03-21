@@ -9,25 +9,31 @@ Exercises
 5. Make the ghosts smarter.
 """
 
+# Importacion de funciones necesarias
 from random import choice
 from turtle import Turtle, bgcolor, clear, up, goto
 from turtle import tracer, listen, onkey, done
 from turtle import dot, update, ontimer, setup, hideturtle
-
 from freegames import floor, vector
 
+# Diccionario donde se guarda el estado del juego (puntaje)
 state = {'score': 0}
+# Objetos invisibles que dibujan el mapa y muestran el puntaje
 path = Turtle(visible=False)
 writer = Turtle(visible=False)
+# Direccion Inicial de pacman (en esta caso hacia la drecha)
 aim = vector(5, 0)
+# Posicion inicial de pacman
 pacman = vector(-40, -80)
+# Lista con los fantasmas con posicion inicial y direccion respectivamente
 ghosts = [
     [vector(-180, 160), vector(5, 0)],
     [vector(-180, -160), vector(0, 5)],
     [vector(100, 160), vector(0, -5)],
     [vector(100, -160), vector(-5, 0)],
 ]
-# fmt: off
+# Mapa del juego en una cuadricula de 20x20 (0= pared, 1=punto)
+# Cambiar esta lista cambia el diseño del laberinto
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
@@ -54,7 +60,7 @@ tiles = [
 
 
 def square(x, y):
-    """Draw square using path at (x, y)."""
+    """Draw blue square using path at (x, y)."""
     path.up()
     path.goto(x, y)
     path.down()
@@ -68,7 +74,7 @@ def square(x, y):
 
 
 def offset(point):
-    """Return offset of point in tiles."""
+    """Convierte un punto (x,y) en un indice de la lista tiles"""
     x = (floor(point.x, 20) + 200) / 20
     y = (180 - floor(point.y, 20)) / 20
     index = int(x + y * 20)
@@ -76,7 +82,7 @@ def offset(point):
 
 
 def valid(point):
-    """Return True if point is valid in tiles."""
+    """Devuelve True si no choca con una pared"""
     index = offset(point)
 
     if tiles[index] == 0:
@@ -91,7 +97,7 @@ def valid(point):
 
 
 def world():
-    """Draw world using path."""
+    """Dibuja el laberiton y los puntos"""
     bgcolor('black')
     path.color('blue')
 
@@ -110,32 +116,33 @@ def world():
 
 
 def move():
-    """Move pacman and all ghosts."""
-    writer.undo()
-    writer.write(state['score'])
+    """Movimiento de pacman y fantasmas"""
+    writer.undo()  # borra texto anterior
+    writer.write(state['score'])  # escribe el puntaje actualizado
 
-    clear()
-
-    if valid(pacman + aim):
+    clear()  # Borra la pantalla antes de volver a dibujar
+    if valid(pacman + aim):  # si el siguiente moviemiento de pacman es valido lo mueve
         pacman.move(aim)
 
     index = offset(pacman)
 
-    if tiles[index] == 1:
-        tiles[index] = 2
-        state['score'] += 1
+    if tiles[index] == 1:  # si hay un punto en dicha posicion de pacman
+        tiles[index] = 2  # lo marca como adquirido
+        state['score'] += 1  # el puntaje aumenta en uno
         x = (index % 20) * 20 - 200
         y = 180 - (index // 20) * 20
-        square(x, y)
+        square(x, y)  # borra dicho punto
 
     up()
     goto(pacman.x + 10, pacman.y + 10)
-    dot(20, 'yellow')
+    dot(20, 'yellow')  # dibuja a pacman
 
+# mueve y dibuja a los fantasmas
     for point, course in ghosts:
         if valid(point + course):
             point.move(course)
         else:
+            # si chocan con una pared se mueven hacia una direccion aleatoria
             options = [
                 vector(5, 0),
                 vector(-5, 0),
@@ -148,35 +155,40 @@ def move():
 
         up()
         goto(point.x + 10, point.y + 10)
-        dot(20, 'red')
+        dot(20, 'red')  # Dibuja el fantasma
 
-    update()
+    update()  # Actualiza el dibujo en pantalla
 
+# verifica si algun fantasma ha atrapado a pacman
     for point, course in ghosts:
         if abs(pacman - point) < 20:
-            return
+            return  # fin del juego en ese caso y ya no se llama a la funcion move
 
-    ontimer(move, 100)
+    ontimer(move, 100)  # llama a la funcion despues de 100ms
 
 
 def change(x, y):
-    """Change pacman aim if valid."""
+    """Cambia la direccion de pacman si no choca con pared"""
     if valid(pacman + vector(x, y)):
         aim.x = x
         aim.y = y
 
 
-setup(420, 420, 370, 0)
-hideturtle()
-tracer(False)
+# Configuaracion de la ventana de juego
+setup(420, 420, 370, 0)  # tamanio de la ventana
+hideturtle()  # oculta tortuga incial?
+tracer(False)  # Apaga la animacion automatica para tener mas control
 writer.goto(160, 160)
 writer.color('white')
-writer.write(state['score'])
+writer.write(state['score'])  # Muestra el puntaje inicial
+# Configuracion de las teclas de movimiento
 listen()
-onkey(lambda: change(5, 0), 'Right')
-onkey(lambda: change(-5, 0), 'Left')
-onkey(lambda: change(0, 5), 'Up')
-onkey(lambda: change(0, -5), 'Down')
-world()
-move()
-done()
+onkey(lambda: change(5, 0), 'Right')  # Flecha derecha
+onkey(lambda: change(-5, 0), 'Left')  # Flecha izquierda
+onkey(lambda: change(0, 5), 'Up')  # Flecha arriba
+onkey(lambda: change(0, -5), 'Down')  # Flecha abajo
+
+# Inicia el juego
+world()  # dibuja el mapa
+move()  # Comienza a mover a pacman y los fantasmas
+done()  # finaliza la configuacion para iniciar el bucle principal
