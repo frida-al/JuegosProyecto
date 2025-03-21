@@ -11,13 +11,13 @@ Exercises:
 
 from random import *
 from turtle import *
-
 from freegames import path
 
 car = path('car.gif')
 tiles = list(range(32)) * 2
 state = {'mark': None}
 hide = [True] * 64
+pairsFound = 0 # Initializa count of uncovered pairs
 
 
 def square(x, y):
@@ -45,6 +45,7 @@ def xy(count):
 
 def tap(x, y):
     """Update mark and hidden tiles based on tap."""
+    global pairsFound # Use global variable
     spot = index(x, y)
     mark = state['mark']
 
@@ -53,6 +54,7 @@ def tap(x, y):
     else:
         hide[spot] = False
         hide[mark] = False
+        pairsFound += 1 # Increment count of uncovered pairs
         state['mark'] = None
 
 
@@ -77,6 +79,11 @@ def draw():
         color('black')
         write(tiles[mark], font=('Arial', 30, 'normal'))
 
+    up()
+    goto(-200, 200)
+    color('green')
+    write(f'Pairs found: {pairsFound}', font = ('Roboto', 20, 'normal'))
+
     update()
     ontimer(draw, 100)
 
@@ -90,17 +97,3 @@ onscreenclick(tap)
 draw()
 done()
 Logo
-
-Free Python Games
-
-
-Donate
-If you or your organization uses Free Games, consider donating:
-
-Donate to Free Python Games
-
-Related Topics
-Documentation overview
-Previous: Connect Four
-Next: Minesweeper
-Quick search
