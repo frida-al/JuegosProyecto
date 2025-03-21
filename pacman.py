@@ -113,7 +113,21 @@ def world():
             if tile == 1:
                 path.up()
                 path.goto(x + 10, y + 10)
-                path.dot(2, 'white')
+                path.down()
+                path.dot(9, 'green')  # color del alimento
+
+            # mini pacmans como alimento
+            path.begin_fill()  # rellenar cualquier forma que se dibuje
+            for _ in range(4):  # bucle que se repite cuatro veces
+                path.forward(4)  # mueve 4 pixeles hacia adelante
+                path.left(90)  # gira 90 grados
+            path.end_fill()
+
+
+"""=======
+Una vez que terimine el bucle de 4 veces se esperaba un cuadrado pero
+Salieron unos minipacmans
+=========="""
 
 
 def move():
