@@ -56,6 +56,12 @@ def tap(x, y):
         hide[mark] = False
         pairsFound += 1 # Increment count of uncovered pairs
         state['mark'] = None
+    if all(not h for h in hide): # Verification, if all tiles have been uncovered
+        up()
+        goto(-200, 0)
+        color('green')
+        write("All pairs uncovered! Game over!", font = ('Roboto', 20, 'normal'))
+        return
 
 
 def draw():
