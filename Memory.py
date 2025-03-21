@@ -14,9 +14,9 @@ from turtle import *
 from freegames import path
 
 car = path('car.gif')
-tiles = list(range(32)) * 2
+tiles = list(range(50)) * 2 # Changing tile number
 state = {'mark': None}
-hide = [True] * 64
+hide = [True] * 100
 pairsFound = 0 # Initializa count of uncovered pairs
 
 
@@ -35,12 +35,13 @@ def square(x, y):
 
 def index(x, y):
     """Convert (x, y) coordinates to tiles index."""
-    return int((x + 200) // 50 + ((y + 200) // 50) * 8)
+    return int((x + 250) // 45 + ((y + 250) // 45) * 10) #Adjusting coordinates on new number of tiles
 
 
 def xy(count):
     """Convert tiles count to (x, y) coordinates."""
-    return (count % 8) * 50 - 200, (count // 8) * 50 - 200
+    return (count % 10) * 45 - 250, (count // 10) * 45 - 250 #Adjusting coordinates on new number of tiles
+
 
 
 def tap(x, y):
@@ -71,7 +72,7 @@ def draw():
     shape(car)
     stamp()
 
-    for count in range(64):
+    for count in range(100):
         if hide[count]:
             x, y = xy(count)
             square(x, y)
