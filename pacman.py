@@ -27,10 +27,10 @@ aim = vector(5, 0)
 pacman = vector(-40, -80)
 # Lista con los fantasmas con posicion inicial y direccion respectivamente
 ghosts = [
-    [vector(-180, 160), vector(5, 0)],
-    [vector(-180, -160), vector(0, 5)],
-    [vector(100, 160), vector(0, -5)],
-    [vector(100, -160), vector(-5, 0)],
+    [vector(-180, 160), vector(15, 0)],
+    [vector(-180, -160), vector(0, 15)],
+    [vector(100, 160), vector(0, -15)],
+    [vector(100, -160), vector(-15, 0)],
 ]
 # Mapa del juego en una cuadricula de 20x20 (0= pared, 1=punto)
 # Cambiar esta lista cambia el diseño del laberinto
@@ -179,7 +179,7 @@ def move():
         if abs(pacman - point) < 20:
             return  # fin del juego en ese caso y ya no se llama a la funcion move
 
-    ontimer(move, 100)  # llama a la funcion despues de 100ms
+    ontimer(move, 50)  # llama a la funcion despues de 100ms
 
 
 def change(x, y):
